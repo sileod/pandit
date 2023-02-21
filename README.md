@@ -41,7 +41,7 @@ drop columns that are constant
 
 ### FAQ
 - Should I use it ?
-- Yes.
+Yes.
 
 - Should I use it in production ?
-- No.
+No.
