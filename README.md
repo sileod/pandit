@@ -1,4 +1,4 @@
-# pandit
+# pandit ☸️ 
 Pandas with some cool additional features
 
 ### Installation and usage
