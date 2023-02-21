@@ -14,8 +14,10 @@ df.sieve(x=3).show()
 
 ### `sieve`
 ```python
-df.sieve(column1=value1, columns2=value2) # returns df rows where column equals value (if value is not a list, otherwise:)
-df.sieve(column=[value1,value2]) # returns df rows where column is value1 or value2; use [[value1,value2]] to match lists
+df.sieve(column1=value1, columns2=value2)
+# returns df rows where column equals value (if value is not a list, otherwise:)
+df.sieve(column=[value1,value2])
+# returns df rows where column is value1 or value2; use [[value1,value2]] to match lists
 # It's like pd.query but with a pythonic syntax instead of the sql string.
 ```
 
