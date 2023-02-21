@@ -24,7 +24,8 @@ df.sieve(column=[value1,value2])
 
 ### `show`
 ```python
-df.show() # shows multiple rows column by column (one line per column) with nice formatting
+df.show() # shows multiple rows column by column (one line per column) with nice formatting, one line per column
+# ideal for inspecting NLP datasets
 df.rshow(n) # random sample of size n (default is 20)
 ```
 
