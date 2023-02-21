@@ -28,7 +28,7 @@ df.rshow(n) # random sample of size n
 Also:
 
 ### `read_tsv`
-`read_csv` with `sep='\t'`
+`read_csv` with `sep='\t'` for lazy persons
 ### `read_jsonl`
 ### `read_wandb(project_name)`
 ### `drop_constant`
