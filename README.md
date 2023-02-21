@@ -28,7 +28,7 @@ df.rshow(n) # random sample of size n
 Also:
 
 ### `bold_max`
-bold max float values `(df.bold_max().to_latex())`
+bold max float values `df.bold_max().to_latex()`
 ### `read_tsv`
 `read_csv` with `sep='\t'` for lazy persons
 ### `read_jsonl`
