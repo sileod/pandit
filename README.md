@@ -38,3 +38,10 @@ bold max float values `df.bold_max().to_latex()`
 ### `read_wandb(project_name)`
 ### `drop_constant`
 drop columns that are constant
+
+### FAQ
+- Should I use it ?
+- Yes.
+
+- Should I use it in production ?
+- No.
