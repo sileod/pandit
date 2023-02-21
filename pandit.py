@@ -46,11 +46,13 @@ def read_wandb(project_name, exclude_gradients=True):
     summary_df = pd.DataFrame.from_records(summary_list) 
     config_df = pd.DataFrame.from_records(config_list) 
     name_df = pd.DataFrame({'name': name_list}) 
-    return pd.concat([name_df, config_df,summary_df], axis=1)
-
+    df = pd.concat([name_df, config_df,summary_df], axis=1)
+    df=df.loc[:,~df.columns.duplicated()]   
+    return df
 
 def sieve(df,d=dict(), **kwargs):
     df=df.copy()
+    #df=df.loc[:,~df.columns.duplicated()]
     for k,v in {**d, **kwargs}.items():
         if type(v)!=list:
             v=[v]
@@ -60,7 +62,16 @@ def sieve(df,d=dict(), **kwargs):
 def drop_constant(df):
     df=df.copy()
     return df.loc[:,df.astype(str).nunique()!=1]
-    
+
+
+def _bold_row(x):
+    if x.dtype==np.float64: 
+        x=x.map(lambda c: f"$\textbf{{{round(c,1)}}}$" if c==x.max() else "{:.1f}".format(c))
+    return x
+
+def bold_max(df):
+    return df.apply(_bold_row)
+
 
 def show(df,n=20,random=False,escape=True,sep_width=120):
     '''Aesthethic visualization of data with multiple (possibly long) text fields)'''
@@ -85,9 +96,12 @@ def rshow(df,n=20):
     '''Aesthethic visualization of shuffled data with multiple (possibly long) text fields)'''
     return show(df,n,random=True)
 
+from pandas import *
 
 PandasObject.show = show
 PandasObject.rshow = rshow
+PandasObject.bold_max = bold_max
+
 pd.read_wandb = read_wandb
 pd.read_jsonl = read_jsonl
 pd.read_tsv = read_tsv
