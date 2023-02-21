@@ -11,21 +11,21 @@ from dataclasses import dataclass
 from string import Template
 
 
-def read_tsv(**kwargs):
-    return pd.read_csv(**kwargs,sep='\t')
+def read_tsv(*args,**kwargs):
+    return pd.read_csv(*args,**kwargs,sep='\t')
 
-def read_jsonl(**kwargs):
-    return pd.read_json(**kwargs,lines=True)
+def read_jsonl(*args,**kwargs):
+    return pd.read_json(*args,**kwargs,lines=True)
 
-def read_auto(path, **kwargs):
+def read_auto(path, *args, **kwargs):
     if path.endswith('.csv'):
-        return pd.read_csv(path, **kwargs)
+        return pd.read_csv(path,*args, **kwargs)
     if path.endswith('.tsv'):
-        return read_tsv(path, **kwargs)
+        return read_tsv(path,*args,**kwargs)
     if path.endswith('.json'):
-        return pd.read_json(path, **kwargs)
+        return pd.read_json(path,*args, **kwargs)
     if path.endswith('.jsonl'):
-        return read_jsonl(path, **kwargs)
+        return read_jsonl(path,*args, **kwargs)
 
 def read_wandb(project_name, exclude_gradients=True):
     """source: https://docs.wandb.ai/guides/track/public-api-guide"""
