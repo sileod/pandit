@@ -33,6 +33,8 @@ df.rshow(n) # random sample of size n
 Also:
 
 ### `read_tsv`
+`read_csv` with `sep='\t'`
 ### `read_jsonl`
 ### `read_wandb(project_name)`
 ### `drop_constant`
+drop columns that are constant
