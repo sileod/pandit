@@ -6,10 +6,10 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(name='xpflow',
       version='{{VERSION_PLACEHOLDER}}',
-      description='Utilities for representing experiments with classes',
-      url='https://github.com/sileod/xpflow',
+      description='Pandas with some cool additional features',
+      url='https://github.com/sileod/pandit',
       author='sileod',
-      license='MIT',
+      license='GPL',
       install_requires=['pandas'],
       py_modules=['pandit'],
       long_description=long_description,
