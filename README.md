@@ -1,6 +1,22 @@
 # pandit
 Pandas with some cool additional features
 
+### Installation and usage
+`pip install pandit`
+```python
+import pandas as pd
+import pandit
+```
+or
+```python
+import pandit as pd
+```
+then
+```python
+df=pd.read_tsv(path)
+df.sieve(x=3).show()
+```
+
 ### `sieve`
 ```python
 df.sieve(column=value) # returns df rows where column equals value
