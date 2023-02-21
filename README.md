@@ -10,6 +10,7 @@ import pandit as pd
 
 df=pd.read_tsv(path)
 df.sieve(x=3).show()
+#Pandas behaves normally otherwise
 ```
 
 ### `sieve`
