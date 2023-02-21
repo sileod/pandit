@@ -14,7 +14,7 @@ df.sieve(x=3).show()
 
 ### `sieve`
 ```python
-df.sieve(column=value) # returns df rows where column equals value
+df.sieve(column1=value1, columns2=value2) # returns df rows where column equals value
 df.sieve(column=[value1,value2]) # returns df rows where column is value1 or value2
 # It's like pd.query but with a pythonic syntax instead of the sql string.
 ```
