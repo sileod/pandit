@@ -24,7 +24,7 @@ df.sieve(column=[value1,value2])
 ### `show`
 ```python
 df.show() # shows multiple rows column by column (one line per column) with nice formatting
-df.rshow(n) # random sample of size n
+df.rshow(n) # random sample of size n (default is 20)
 ```
 
 Also:
