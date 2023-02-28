@@ -1,4 +1,4 @@
-# pandit - pandas utils☸️ 
+# pandit ☸️ pandas utils 
 Pandas with some cool additional features
 
 ### Installation and usage
