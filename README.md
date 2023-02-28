@@ -36,13 +36,13 @@ bold max float values `df.bold_max().to_latex()`
 ### `read_tsv`
 `read_csv` with `sep='\t'` for lazy persons
 ### `read_jsonl`
+### `read`
+`read_{extension}` guessed with the input path
 ### `read_wandb(project_name)`
-### `drop_constant`
+### `drop_constant_column`
 drop columns that are constant
-
+### ` to_dropbox(df, path, format=None, token=None,**kwargs)`
+Save dataframe to dropbox
 ### FAQ
-- Should I use it ?
-Yes.
-
-- Should I use it in production ?
+- Should I use pandit in production ?
 No.
