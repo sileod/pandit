@@ -37,7 +37,7 @@ bold max float values `df.bold_max().to_latex()`
 `read_csv` with `sep='\t'` for lazy persons
 ### `read_jsonl`
 ### `read`
-`read_{extension}` guessed with the input path
+`read_{extension}` where extension is extracted from the input path (.csv = read_csv)
 ### `read_wandb(project_name)`
 ### `drop_constant_column`
 drop columns that are constant
