@@ -1,4 +1,4 @@
-
+from pandas import *
 import pandas as pd
 import warnings
 import copy
@@ -10,22 +10,26 @@ import html
 from dataclasses import dataclass
 from string import Template
 
-
 def read_tsv(*args,**kwargs):
     return pd.read_csv(*args,**kwargs,sep='\t')
+
+def to_tsv(df, *args,**kwargs):
+    return df.to_csv(*args,**kwargs,sep='\t')
 
 def read_jsonl(*args,**kwargs):
     return pd.read_json(*args,**kwargs,lines=True)
 
-def read_auto(path, *args, **kwargs):
-    if path.endswith('.csv'):
-        return pd.read_csv(path,*args, **kwargs)
-    if path.endswith('.tsv'):
-        return read_tsv(path,*args,**kwargs)
-    if path.endswith('.json'):
-        return pd.read_json(path,*args, **kwargs)
-    if path.endswith('.jsonl'):
-        return read_jsonl(path,*args, **kwargs)
+def to_jsonl(df, *args,**kwargs):
+    return df.to_json(*args,**kwargs,lines=True, orient='records')
+
+def read(path, *args, **kwargs):
+    end=None
+    try:
+        end = path.split('.')[-1]
+        getattr(pd,f'read_{end}')(path,*args,**kwargs)
+    except:
+        print(f'Format could not be guessed based on the extension. ({end})')
+        return None
 
 def read_wandb(project_name, exclude_gradients=True):
     """source: https://docs.wandb.ai/guides/track/public-api-guide"""
@@ -59,7 +63,7 @@ def sieve(df,d=dict(), **kwargs):
         df=df[df[k].map(lambda x:x in v)]
     return df
 
-def drop_constant(df):
+def drop_constant_columns(df):
     df=df.copy()
     return df.loc[:,df.astype(str).nunique()!=1]
 
@@ -72,6 +76,18 @@ def _bold_row(x):
 def bold_max(df):
     return df.apply(_bold_row)
 
+def to_dropbox(df, path, format=None, token=None,**kwargs):
+    import dropbox
+    if not format:
+        format=path.split('.')[-1]
+    dbx = dropbox.Dropbox(token)
+    df_string = getattr(df,f'to_{format}')(**kwargs)
+    db_bytes = bytes(df_string, 'utf8')
+    dbx.files_upload(
+        f=db_bytes,
+        path=path,
+        mode=dropbox.files.WriteMode.overwrite
+    )
 
 def show(df,n=20,random=False,escape=True,sep_width=120):
     '''Aesthethic visualization of data with multiple (possibly long) text fields)'''
@@ -83,7 +99,7 @@ def show(df,n=20,random=False,escape=True,sep_width=120):
     
     if hasattr(df,'columns'):
         for c in df.columns:
-            df[c]='•'+df[c].map(str).map(str.strip)
+            df[c]='─ '+df[c].map(str).map(str.strip)
     df.index=['─'*sep_width]*len(df)
 
     s=df.to_csv(None,sep="\n")
@@ -96,7 +112,6 @@ def rshow(df,n=20):
     '''Aesthethic visualization of shuffled data with multiple (possibly long) text fields)'''
     return show(df,n,random=True)
 
-from pandas import *
 
 PandasObject.show = show
 PandasObject.rshow = rshow
@@ -105,6 +120,10 @@ PandasObject.bold_max = bold_max
 pd.read_wandb = read_wandb
 pd.read_jsonl = read_jsonl
 pd.read_tsv = read_tsv
-pd.read_auto = read_auto
-PandasObject.drop_constant=drop_constant
+pd.read = read
+PandasObject.drop_constant=drop_constant_columns
 PandasObject.sieve=sieve
+
+PandasObject.to_dropbox=to_dropbox
+PandasObject.to_jsonl=to_jsonl
+PandasObject.to_tsv=to_tsv
