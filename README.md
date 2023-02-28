@@ -41,7 +41,7 @@ bold max float values `df.bold_max().to_latex()`
 ### `read_wandb(project_name)`
 ### `drop_constant_column`
 drop columns that are constant
-### ` to_dropbox(df, path, format=None, token=None,**kwargs)`
+### `to_dropbox(df, path, format=None, token=None,**kwargs)`
 Save dataframe to dropbox
 ### FAQ
 - Should I use pandit in production ?
