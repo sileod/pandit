@@ -1,14 +1,9 @@
 from pandas import *
 import pandas as pd
-import warnings
-import copy
 import numpy as np
-from collections import Iterable
 from pandas.core.base import PandasObject
-from IPython.display import display, HTML
+from IPython.display import HTML
 import html
-from dataclasses import dataclass
-from string import Template
 
 def read_tsv(*args,**kwargs):
     return pd.read_csv(*args,**kwargs,sep='\t')
@@ -26,7 +21,16 @@ def read(path, *args, **kwargs):
     end=None
     try:
         end = path.split('.')[-1]
-        getattr(pd,f'read_{end}')(path,*args,**kwargs)
+        return getattr(pd,f'read_{end}')(path,*args,**kwargs)
+    except:
+        print(f'Format could not be guessed based on the extension. ({end})')
+        return None
+
+def to(df, path, *args, **kwargs):
+    end=None
+    try:
+        end = path.split('.')[-1]
+        return getattr(df,f'to_{end}')(path,*args,**kwargs)
     except:
         print(f'Format could not be guessed based on the extension. ({end})')
         return None
@@ -58,6 +62,9 @@ def sieve(df,d=dict(), **kwargs):
     df=df.copy()
     #df=df.loc[:,~df.columns.duplicated()]
     for k,v in {**d, **kwargs}.items():
+        if callable(v):
+            df=df[df[k].map(v)]
+            continue
         if type(v)!=list:
             v=[v]
         df=df[df[k].map(lambda x:x in v)]
@@ -67,6 +74,12 @@ def drop_constant_columns(df):
     df=df.copy()
     return df.loc[:,df.astype(str).nunique()!=1]
 
+
+def safe_sample(df,n=None,*args, **kwargs):
+    if not n or len(df)<=n:
+        return df
+    else:
+        return df.sample(n,*args,**kwargs)
 
 def _bold_row(x):
     if x.dtype==np.float64: 
@@ -89,7 +102,17 @@ def to_dropbox(df, path, format=None, token=None,**kwargs):
         mode=dropbox.files.WriteMode.overwrite
     )
 
-def show(df,n=20,random=False,escape=True,sep_width=120):
+def to_sheets(df,id,sheet_name,credential, include_index=False):
+    import gspread
+    from gspread_dataframe import set_with_dataframe
+    gc = gspread.service_account_from_dict(credential)
+    sh = gc.open_by_key(id)
+    set_with_dataframe(worksheet=sh.worksheet(sheet_name),
+        dataframe=df,
+        include_index=include_index)
+
+
+def show(df,n=20,random=False,escape=True,sep_width=120,header=False,length=True):
     '''Aesthethic visualization of data with multiple (possibly long) text fields)'''
     df=df.copy()
     length=len(df)
@@ -99,13 +122,14 @@ def show(df,n=20,random=False,escape=True,sep_width=120):
     
     if hasattr(df,'columns'):
         for c in df.columns:
-            df[c]='─ '+df[c].map(str).map(str.strip)
+            df[c]='  '+df[c].map(str).map(str.strip)
     df.index=['─'*sep_width]*len(df)
 
-    s=df.to_csv(None,sep="\n")
+    s=df.to_csv(None,sep="\n",header=header)
     if escape:
         s=html.escape(s)
-    s=f'length:{length}\n{s}'.replace('\n','<br>')
+    if length:
+        s=f'length:{length}\n{s}'.replace('\n','<br>')
     return HTML(f'<font face="Arial" size="2px">{s}</font>')
 
 def rshow(df,n=20):
@@ -113,17 +137,26 @@ def rshow(df,n=20):
     return show(df,n,random=True)
 
 
-PandasObject.show = show
-PandasObject.rshow = rshow
-PandasObject.bold_max = bold_max
+def undersample(df, column='label',sampling_strategy='auto',random_state=None,replacement=False):
+    from imblearn.under_sampling import RandomUnderSampler
+    rus = RandomUnderSampler(sampling_strategy=sampling_strategy,random_state=random_state,replacement=replacement)
+    df, _=rus.fit_resample(df, list(df[column]))
+    return df.sample(frac=1.0).reset_index(drop=True)
+
 
 pd.read_wandb = read_wandb
 pd.read_jsonl = read_jsonl
 pd.read_tsv = read_tsv
 pd.read = read
-PandasObject.drop_constant=drop_constant_columns
-PandasObject.sieve=sieve
 
+PandasObject.show = show
+PandasObject.rshow = rshow
+PandasObject.bold_max = bold_max
+PandasObject.drop_constant_columns=drop_constant_columns
+PandasObject.sieve=sieve
+PandasObject.safe_sample=safe_sample
+PandasObject.undersample=undersample
 PandasObject.to_dropbox=to_dropbox
 PandasObject.to_jsonl=to_jsonl
 PandasObject.to_tsv=to_tsv
+PandasObject.to=to
