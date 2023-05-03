@@ -31,18 +31,19 @@ df.rshow(n) # random sample of size n (default is 20)
 
 Also:
 
-### `bold_max`
+### `df.bold_max()`
 bold max float values `df.bold_max().to_latex()`
-### `read_tsv`
+### `pd.read_tsv`
 `read_csv` with `sep='\t'` for lazy persons
-### `read_jsonl`
-### `read`
-`read_{extension}` where extension is extracted from the input path (.csv = read_csv)
-### `read_wandb(project_name)`
-### `drop_constant_column`
+### `pd.read_jsonl`
+### `pd.read`
+`df.read_{extension}` where extension is extracted from the input path (.csv = read_csv)
+### `pd.read_wandb(project_name)`
+### `df.drop_constant_column`
 drop columns that are constant
-### `to_dropbox(df, path, format=None, token=None,**kwargs)`
+### `df.to_dropbox(path, format=None, token=None,**kwargs)`
 Save dataframe to dropbox
+###  `df.undersample(column='label',sampling_strategy='auto',random_state=None,replacement=False)`
 ### FAQ
 - Should I use pandit in production ?
 No.
