@@ -53,6 +53,4 @@ Save dataframe to dropbox
 ### `df.to_sheets(id,sheet_name,credential=None, include_index=False)`
 Save dataframe to sheets
 ###  `df.undersample(column='label',sampling_strategy='auto',random_state=None,replacement=False)`
-### FAQ
-- Should I use pandit in production ?
-No.
+
