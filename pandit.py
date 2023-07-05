@@ -7,13 +7,8 @@ import html
 import os
 from importlib.util import spec_from_file_location, module_from_spec
 
-credentials=None # 
-"""
-set with pd.credentials=credentials, where 
-credentials.dropbox returns dropbox api key
-gsheet is the credential dict in https://docs.gspread.org/en/latest/oauth2.html
+credentials=None 
 
-"""
 def get_credential(service, credential=None):
     if credential:
         return credential
@@ -32,7 +27,7 @@ def read_jsonl(*args,**kwargs):
 def to_jsonl(df, *args,**kwargs):
     return df.to_json(*args,**kwargs,lines=True, orient='records')
 
-def read_sheet(id,sheet_name):
+def read_sheets(id,sheet_name):
     df=pd.read_excel(f'https://docs.google.com/spreadsheets/d/{id}/export?format=xlsx',sheet_name=sheet_name)
     return df
     
@@ -123,7 +118,7 @@ def to_dropbox(df, path, format=None, token=None,**kwargs):
     )
 
 def to_sheets(df,id,sheet_name,credential=None, include_index=False):
-    credential=get_credential('gsheet',credential)
+    credential=get_credential('sheets',credential)
     import gspread
     from gspread_dataframe import set_with_dataframe
     gc = gspread.service_account_from_dict(credential)
