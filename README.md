@@ -5,8 +5,7 @@ Pandas with some cool additional features
 `pip install pandit`
 ```python
 import pandas as pd, import pandit
-# or 
-import pandit as pd
+# or import pandit as pd
 
 df=pd.read_tsv(path)
 df.sieve(x=3).show()
