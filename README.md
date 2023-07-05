@@ -15,7 +15,7 @@ df.sieve(x=3).show()
 ##### If credentials are needed:
 ```python
 import credentials # you manage that part
-assert credentials.gsheet # credential dict in https://docs.gspread.org/en/latest/oauth2.html
+assert credentials.sheets # credential dict in https://docs.gspread.org/en/latest/oauth2.html
 assert credentials.dropbox # your dropbox API key
 pd.credentials = credentials
 ```
