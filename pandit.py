@@ -4,6 +4,21 @@ import numpy as np
 from pandas.core.base import PandasObject
 from IPython.display import HTML
 import html
+import os
+from importlib.util import spec_from_file_location, module_from_spec
+
+credentials=None # 
+"""
+set with pd.credentials=credentials, where 
+credentials.dropbox returns dropbox api key
+gsheet is the credential dict in https://docs.gspread.org/en/latest/oauth2.html
+
+"""
+def get_credential(service, credential=None):
+    if credential:
+        return credential
+    else:
+        return getattr(credentials, service)
 
 def read_tsv(*args,**kwargs):
     return pd.read_csv(*args,**kwargs,sep='\t')
@@ -90,6 +105,7 @@ def bold_max(df):
     return df.apply(_bold_row)
 
 def to_dropbox(df, path, format=None, token=None,**kwargs):
+    credential=get_credential('dropbox',credential)
     import dropbox
     if not format:
         format=path.split('.')[-1]
@@ -102,7 +118,8 @@ def to_dropbox(df, path, format=None, token=None,**kwargs):
         mode=dropbox.files.WriteMode.overwrite
     )
 
-def to_sheets(df,id,sheet_name,credential, include_index=False):
+def to_sheets(df,id,sheet_name,credential=None, include_index=False):
+    credential=get_credential('gsheet',credential)
     import gspread
     from gspread_dataframe import set_with_dataframe
     gc = gspread.service_account_from_dict(credential)
@@ -144,6 +161,23 @@ def undersample(df, column='label',sampling_strategy='auto',random_state=None,re
     return df.sample(frac=1.0).reset_index(drop=True)
 
 
+def explode_dict(df, column):
+    df=df.reset_index(drop=True)
+    dfc=pd.DataFrame(list(df[column]))
+    df = pd.concat([df,dfc],axis=1)
+    del df[column]
+    return(df)
+
+def train_validation_test_split(df, train_frac=0.8, val_test_frac=0.5):
+    df['_random'] = sorted(np.linspace(0,1, len(df)), key=lambda x:random.random()) 
+    def get_split(x):
+        if x<train_frac: return "train"
+        if x<train_frac+(1-train_frac)*val_test_frac: return "validation"
+        return "test"
+    df['_split'] = df['_random'].map(get_split)    
+    del df['_random']
+    return df
+
 pd.read_wandb = read_wandb
 pd.read_jsonl = read_jsonl
 pd.read_tsv = read_tsv
@@ -153,10 +187,13 @@ PandasObject.show = show
 PandasObject.rshow = rshow
 PandasObject.bold_max = bold_max
 PandasObject.drop_constant_columns=drop_constant_columns
+PandasObject.explode_dict = explode_dict
 PandasObject.sieve=sieve
+PandasObject.train_validation_test_split=train_validation_test_split
 PandasObject.safe_sample=safe_sample
 PandasObject.undersample=undersample
 PandasObject.to_dropbox=to_dropbox
+PandasObject.to_sheets=to_sheets
 PandasObject.to_jsonl=to_jsonl
 PandasObject.to_tsv=to_tsv
 PandasObject.to=to
