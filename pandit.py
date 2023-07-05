@@ -32,6 +32,9 @@ def read_jsonl(*args,**kwargs):
 def to_jsonl(df, *args,**kwargs):
     return df.to_json(*args,**kwargs,lines=True, orient='records')
 
+def read_sheet(id):
+    return pd.read_csv(f'https://docs.google.com/spreadsheets/d/{id}/export?format=csv')
+    
 def read(path, *args, **kwargs):
     end=None
     try:
