@@ -32,8 +32,9 @@ def read_jsonl(*args,**kwargs):
 def to_jsonl(df, *args,**kwargs):
     return df.to_json(*args,**kwargs,lines=True, orient='records')
 
-def read_sheet(id):
-    return pd.read_csv(f'https://docs.google.com/spreadsheets/d/{id}/export?format=csv')
+def read_sheet(id,sheet_name):
+    df=pd.read_excel(f'https://docs.google.com/spreadsheets/d/{id}/export?format=xlsx',sheet_name=sheet_name)
+    return df
     
 def read(path, *args, **kwargs):
     end=None
