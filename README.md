@@ -12,6 +12,13 @@ df=pd.read_tsv(path)
 df.sieve(x=3).show()
 #Pandas behaves normally otherwise
 ```
+### If credentials are needed:
+```python
+import credentials # you manage that part
+assert credentials.gsheet # credential dict in https://docs.gspread.org/en/latest/oauth2.html
+assert credentials.dropbox 
+pd.credentials = credentials
+```
 
 ### `sieve`
 ```python
@@ -43,6 +50,8 @@ bold max float values `df.bold_max().to_latex()`
 drop columns that are constant
 ### `df.to_dropbox(path, format=None, token=None,**kwargs)`
 Save dataframe to dropbox
+### `df.to_sheets(id,sheet_name,credential=None, include_index=False)`
+Save dataframe to sheets
 ###  `df.undersample(column='label',sampling_strategy='auto',random_state=None,replacement=False)`
 ### FAQ
 - Should I use pandit in production ?
